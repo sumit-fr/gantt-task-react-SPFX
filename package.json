@@ -1,6 +1,6 @@
 {
   "name": "gantt-task-react",
-  "version": "0.3.8",
+  "version": "17.3.8",
   "description": "Interactive Gantt Chart for React with TypeScript.",
   "author": "MaTeMaTuK <maksym.vikarii@gmail.com>",
   "homepage": "https://github.com/MaTeMaTuK/gantt-task-react",
@@ -36,7 +36,7 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
-    "react": "^17.0.2"
+    "react": "^17.0.1"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^5.12.0",
