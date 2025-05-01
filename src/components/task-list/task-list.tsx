@@ -17,11 +17,15 @@ export type TaskListProps = {
   selectedTask: BarTask | undefined;
   setSelectedTask: (task: string) => void;
   onExpanderClick: (task: Task) => void;
+  hideDatesColumns?: boolean;
+  hideNameColumn?: boolean;
   TaskListHeader: React.FC<{
     headerHeight: number;
     rowWidth: string;
     fontFamily: string;
     fontSize: string;
+    hideDatesColumns?: boolean;
+    hideNameColumn?: boolean;
   }>;
   TaskListTable: React.FC<{
     rowHeight: number;
@@ -33,6 +37,8 @@ export type TaskListProps = {
     selectedTaskId: string;
     setSelectedTask: (taskId: string) => void;
     onExpanderClick: (task: Task) => void;
+    hideDatesColumns?: boolean;
+    hideNameColumn?: boolean;
   }>;
 };
 
@@ -51,6 +57,8 @@ export const TaskList: React.FC<TaskListProps> = ({
   ganttHeight,
   taskListRef,
   horizontalContainerClass,
+  hideDatesColumns,
+  hideNameColumn,
   TaskListHeader,
   TaskListTable,
 }) => {
@@ -66,6 +74,8 @@ export const TaskList: React.FC<TaskListProps> = ({
     fontFamily,
     fontSize,
     rowWidth,
+    hideDatesColumns,
+    hideNameColumn
   };
   const selectedTaskId = selectedTask ? selectedTask.id : "";
   const tableProps = {
@@ -78,7 +88,9 @@ export const TaskList: React.FC<TaskListProps> = ({
     selectedTaskId: selectedTaskId,
     setSelectedTask,
     onExpanderClick,
-  };
+    hideDatesColumns,
+    hideNameColumn
+    };
 
   return (
     <div ref={taskListRef}>

@@ -113,6 +113,8 @@ export interface StylingOption {
   arrowColor?: string;
   arrowIndent?: number;
   todayColor?: string;
+  hideDatesColumns?: boolean;
+  hideNameColumn?: boolean;
   TooltipContent?: React.FC<{
     task: Task;
     fontSize: string;
@@ -123,6 +125,8 @@ export interface StylingOption {
     rowWidth: string;
     fontFamily: string;
     fontSize: string;
+    hideDatesColumns?: boolean;
+    hideNameColumn?: boolean;
   }>;
   TaskListTable?: React.FC<{
     rowHeight: number;
@@ -132,6 +136,8 @@ export interface StylingOption {
     locale: string;
     tasks: Task[];
     selectedTaskId: string;
+    hideDatesColumns?: boolean;
+    hideNameColumn?: boolean;
     /**
      * Sets selected task by id
      */
