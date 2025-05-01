@@ -20,9 +20,9 @@ import { BarTask } from "../../types/bar-task";
 import { convertToBarTasks } from "../../helpers/bar-helper";
 import { GanttEvent } from "../../types/gantt-task-actions";
 import { DateSetup } from "../../types/date-setup";
-import styles from "./gantt.module.css";
 import { HorizontalScroll } from "../other/horizontal-scroll";
 import { removeHiddenTasks, sortTasks } from "../../helpers/other-helper";
+import styles from "./gantt.module.css";
 
 export const Gantt: React.FunctionComponent<GanttProps> = ({
   tasks,
@@ -32,6 +32,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
   rowHeight = 50,
   ganttHeight = 0,
   viewMode = ViewMode.Day,
+  preStepsCount = 1,
   locale = "en-GB",
   barFill = 60,
   barCornerRadius = 3,
@@ -62,6 +63,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
   onDateChange,
   onProgressChange,
   onDoubleClick,
+  onClick,
   onDelete,
   onSelect,
   onExpanderClick
@@ -69,7 +71,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const taskListRef = useRef<HTMLDivElement>(null);
   const [dateSetup, setDateSetup] = useState<DateSetup>(() => {
-    const [startDate, endDate] = ganttDateRange(tasks, viewMode);
+    const [startDate, endDate] = ganttDateRange(tasks, viewMode, preStepsCount);
     return { viewMode, dates: seedDates(startDate, endDate, viewMode) };
   });
   const [currentViewDate, setCurrentViewDate] = useState<Date | undefined>(
@@ -107,7 +109,11 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
       filteredTasks = tasks;
     }
     filteredTasks = filteredTasks.sort(sortTasks);
-    const [startDate, endDate] = ganttDateRange(filteredTasks, viewMode);
+    const [startDate, endDate] = ganttDateRange(
+      filteredTasks,
+      viewMode,
+      preStepsCount
+    );
     let newDates = seedDates(startDate, endDate, viewMode);
     if (rtl) {
       newDates = newDates.reverse();
@@ -141,6 +147,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
   }, [
     tasks,
     viewMode,
+    preStepsCount,
     rowHeight,
     barCornerRadius,
     columnWidth,
@@ -184,6 +191,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     viewDate,
     columnWidth,
     dateSetup.dates,
+    dateSetup.viewMode,
     viewMode,
     currentViewDate,
     setCurrentViewDate,
@@ -246,7 +254,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     } else {
       setSvgContainerHeight(tasks.length * rowHeight + headerHeight);
     }
-  }, [ganttHeight, tasks]);
+  }, [ganttHeight, tasks, headerHeight, rowHeight]);
 
   // scroll events
   useEffect(() => {
@@ -278,30 +286,38 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     };
 
     // subscribe if scroll is necessary
-    if (wrapperRef.current) {
-      wrapperRef.current.addEventListener("wheel", handleWheel, {
-        passive: false,
-      });
-    }
+    wrapperRef.current?.addEventListener("wheel", handleWheel, {
+      passive: false,
+    });
     return () => {
-      if (wrapperRef.current) {
-        wrapperRef.current.removeEventListener("wheel", handleWheel);
-      }
+      wrapperRef.current?.removeEventListener("wheel", handleWheel);
     };
-  }, [wrapperRef.current, scrollY, scrollX, ganttHeight, svgWidth, rtl]);
+  }, [
+    wrapperRef,
+    scrollY,
+    scrollX,
+    ganttHeight,
+    svgWidth,
+    rtl,
+    ganttFullHeight,
+  ]);
 
   const handleScrollY = (event: SyntheticEvent<HTMLDivElement>) => {
     if (scrollY !== event.currentTarget.scrollTop && !ignoreScrollEvent) {
       setScrollY(event.currentTarget.scrollTop);
+      setIgnoreScrollEvent(true);
+    } else {
+      setIgnoreScrollEvent(false);
     }
-    setIgnoreScrollEvent(false);
   };
 
   const handleScrollX = (event: SyntheticEvent<HTMLDivElement>) => {
     if (scrollX !== event.currentTarget.scrollLeft && !ignoreScrollEvent) {
       setScrollX(event.currentTarget.scrollLeft);
+      setIgnoreScrollEvent(true);
+    } else {
+      setIgnoreScrollEvent(false);
     }
-    setIgnoreScrollEvent(false);
   };
 
   /**
@@ -413,6 +429,7 @@ export const Gantt: React.FunctionComponent<GanttProps> = ({
     onDateChange,
     onProgressChange,
     onDoubleClick,
+    onClick,
     onDelete,
   };
 
