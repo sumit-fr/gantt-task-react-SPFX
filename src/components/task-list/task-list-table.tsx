@@ -31,6 +31,8 @@ export const TaskListTableDefault: React.FC<{
   selectedTaskId: string;
   setSelectedTask: (taskId: string) => void;
   onExpanderClick: (task: Task) => void;
+  hideNameColumn?: boolean;
+  hideDatesColumns?:boolean;
 }> = ({
   rowHeight,
   rowWidth,
@@ -39,6 +41,8 @@ export const TaskListTableDefault: React.FC<{
   fontSize,
   locale,
   onExpanderClick,
+  hideNameColumn,
+  hideDatesColumns
 }) => {
   const toLocaleDateString = useMemo(
     () => toLocaleDateStringFactory(locale),
@@ -67,6 +71,7 @@ export const TaskListTableDefault: React.FC<{
             style={{ height: rowHeight }}
             key={`${t.id}row`}
           >
+            {!hideNameColumn && (
             <div
               className={styles.taskListCell}
               style={{
@@ -88,7 +93,8 @@ export const TaskListTableDefault: React.FC<{
                 </div>
                 <div>{t.name}</div>
               </div>
-            </div>
+            </div>)}
+            {!hideDatesColumns && (<div>
             <div
               className={styles.taskListCell}
               style={{
@@ -106,7 +112,7 @@ export const TaskListTableDefault: React.FC<{
               }}
             >
               &nbsp;{toLocaleDateString(t.end, dateTimeOptions)}
-            </div>
+            </div></div>)}
           </div>
         );
       })}

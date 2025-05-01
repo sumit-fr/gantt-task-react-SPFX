@@ -6,7 +6,9 @@ export const TaskListHeaderDefault: React.FC<{
   rowWidth: string;
   fontFamily: string;
   fontSize: string;
-}> = ({ headerHeight, fontFamily, fontSize, rowWidth }) => {
+  hideDatesColumns?:boolean;
+  hideNameColumn?:boolean;
+}> = ({ headerHeight, fontFamily, fontSize, rowWidth,hideDatesColumns,hideNameColumn }) => {
   return (
     <div
       className={styles.ganttTable}
@@ -21,6 +23,7 @@ export const TaskListHeaderDefault: React.FC<{
           height: headerHeight - 2,
         }}
       >
+        {!hideNameColumn && (<div>
         <div
           className={styles.ganttTable_HeaderItem}
           style={{
@@ -35,7 +38,9 @@ export const TaskListHeaderDefault: React.FC<{
             height: headerHeight * 0.5,
             marginTop: headerHeight * 0.2,
           }}
-        />
+        /></div>)}
+        {!hideDatesColumns && (
+          <div>
         <div
           className={styles.ganttTable_HeaderItem}
           style={{
@@ -59,6 +64,7 @@ export const TaskListHeaderDefault: React.FC<{
         >
           &nbsp;To
         </div>
+        </div>)}
       </div>
     </div>
   );
